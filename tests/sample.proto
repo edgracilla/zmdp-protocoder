@@ -1,0 +1,24 @@
+package sample;
+import "meta.proto";
+
+syntax = "proto3";
+
+// -- Requests
+
+message Sample {
+  string _id = 1;
+  string user = 2;
+  string role = 3;
+  bool active = 4;
+}
+
+message test {
+  string _id = 1;
+  Meta meta = 2;
+}
+
+// -- Results
+
+message testResult {
+  Sample result = 1;
+}

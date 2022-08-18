@@ -1,0 +1,21 @@
+syntax = "proto3";
+package meta;
+
+message Foo {
+  string _id = 1;
+}
+
+message Bar {
+  string _id = 1;
+  string name = 2;
+}
+
+message Beer {
+  bool flag = 1;
+}
+
+message Meta {
+  Foo foo = 1;
+  Bar bar = 2;
+  Beer beer = 3;
+}
