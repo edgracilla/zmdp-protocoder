@@ -1,0 +1,24 @@
+{
+  "name": "zmdp-protocoder",
+  "version": "1.0.0",
+  "description": "ZMDP Suite protobuf encoder/decoder",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edgracilla/zmdp-protocoder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edgracilla/zmdp-protocoder/issues"
+  },
+  "homepage": "https://github.com/edgracilla/zmdp-protocoder#readme",
+  "dependencies": {
+    "protobufjs": "^7.0.0"
+  }
+}
