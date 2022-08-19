@@ -1,6 +1,6 @@
-import protobuf from 'protobufjs'
+const protobuf = require('protobufjs')
 
-export default class ProtoCoder {
+class ProtoCoder {
   constructor (protoSrc) {
     this.protoSrc = protoSrc
   }
@@ -51,3 +51,5 @@ export default class ProtoCoder {
     return proto.toObject(msg)
   }
 }
+
+module.exports = ProtoCoder

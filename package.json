@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "ZMDP Suite protobuf encoder/decoder",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules ./node_modules/.bin/jest --colors --verbose"
+    "test": "jest --colors --verbose"
   },
   "repository": {
     "type": "git",
