@@ -1,6 +1,7 @@
-/// <reference types="node" />
+export as namespace ProtoCoderLib;
+export = ProtoCoder;
 
-export declare class ProtoCoder {
+declare class ProtoCoder {
   protoSrc: string;
   constructor(protoSrc: string);
 
