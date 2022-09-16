@@ -1,0 +1,21 @@
+{
+  "plugins": [
+    "security",
+    "jest"
+  ],
+  "extends": [
+    "airbnb/base",
+    "plugin:jest/recommended",
+    "plugin:security/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
+  "rules": {
+    "import/extensions": ["off", "ignorePackages"],
+    "no-underscore-dangle": "off"
+  },
+  "ignorePatterns": [
+    "node_modules"
+  ]
+}

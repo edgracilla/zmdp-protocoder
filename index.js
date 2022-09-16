@@ -1,65 +1,65 @@
-const protobuf = require('protobufjs')
+const protobuf = require('protobufjs');
 
 class ProtoCoder {
-  constructor (protoSrc) {
-    this.protoSrc = protoSrc
+  constructor(protoSrc) {
+    this.protoSrc = protoSrc;
   }
 
-  async paramDecode (module, fnName, arrParams) {
-    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`)
-    const proto = root.lookupType(`${module}.${fnName}`)
-    const msg = proto.decode(arrParams[0])
-    const msgObj = proto.toObject(msg)
+  async paramDecode(module, fnName, arrParams) {
+    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
+    const proto = root.lookupType(`${module}.${fnName}`);
+    const msg = proto.decode(arrParams[0]);
+    const msgObj = proto.toObject(msg);
 
-    return Object.keys(msgObj).map(key => msgObj[key])
+    // eslint-disable-next-line security/detect-object-injection
+    return Object.keys(msgObj).map((key) => msgObj[key]);
   }
 
-  async resultEncode (module, fnName, result) {
-    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`)
-    const proto = root.lookupType(`${module}.${fnName}Result`)
+  async resultEncode(module, fnName, result) {
+    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
+    const proto = root.lookupType(`${module}.${fnName}Result`);
 
-    const errMsg = proto.verify({ result })
+    const errMsg = proto.verify({ result });
 
     if (errMsg) {
-      throw Error(errMsg)
+      throw Error(errMsg);
     }
 
-    const msg = proto.create({ result })
-    const buf = proto.encode(msg).finish()
+    const msg = proto.create({ result });
+    const buf = proto.encode(msg).finish();
 
-    return buf
+    return buf;
   }
 
-  async paramEncode (module, fnName, objParams) {
-    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`)
-    const proto = root.lookupType(`${module}.${fnName}`)
-    
-    const errMsg = proto.verify(objParams)
-    if (errMsg) throw Error(errMsg)
+  async paramEncode(module, fnName, objParams) {
+    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
+    const proto = root.lookupType(`${module}.${fnName}`);
 
-    const msg = proto.create(objParams)
-    const buf = proto.encode(msg).finish()
+    const errMsg = proto.verify(objParams);
+    if (errMsg) throw Error(errMsg);
 
-    return buf
+    const msg = proto.create(objParams);
+    const buf = proto.encode(msg).finish();
+
+    return buf;
   }
 
-  async resultDecode (module, fnName, bufResult) {
-    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`)
-    const proto = root.lookupType(`${module}.${fnName}Result`)
+  async resultDecode(module, fnName, bufResult) {
+    const lookup = `${module}.${fnName}Result`;
+    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
+    const proto = root.lookupType(lookup);
 
     try {
-      const msg = proto.decode(bufResult)
-      return proto.toObject(msg)  
+      const msg = proto.decode(bufResult);
+      return proto.toObject(msg);
     } catch (err) {
-      const protoTrace = `${module}.${fnName}*`
       if (err instanceof protobuf.util.ProtocolError) {
-        throw new Error(`[${protoTrace}] Decoded message with missing required fields!`)
+        throw new Error(`Decoded message with missing required fields! LookupPath: '${lookup}'`);
       } else {
-        throw new Error(`[${protoTrace}] Invalid wire format!`)
+        throw new Error(`Invalid wire format! LookupPath: '${lookup}'`);
       }
-  
     }
   }
 }
 
-module.exports = ProtoCoder
+module.exports = ProtoCoder;

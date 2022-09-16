@@ -13,8 +13,13 @@ message Sample {
 }
 
 message test {
-  string _id = 1;
+  required string _id = 1;
   Meta meta = 2;
+}
+
+message foobar {
+  required string foo = 1;
+  required string bar = 2;
 }
 
 // -- Results
