@@ -46,9 +46,19 @@ class ProtoCoder {
   async resultDecode (module, fnName, bufResult) {
     const root = await protobuf.load(`${this.protoSrc}/${module}.proto`)
     const proto = root.lookupType(`${module}.${fnName}Result`)
-    const msg = proto.decode(bufResult)
 
-    return proto.toObject(msg)
+    try {
+      const msg = proto.decode(bufResult)
+      return proto.toObject(msg)  
+    } catch (err) {
+      const protoTrace = `${module}.${fnName}*`
+      if (err instanceof protobuf.util.ProtocolError) {
+        throw new Error(`[${protoTrace}] Decoded message with missing required fields!`)
+      } else {
+        throw new Error(`[${protoTrace}] Invalid wire format!`)
+      }
+  
+    }
   }
 }
 
