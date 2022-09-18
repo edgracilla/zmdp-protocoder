@@ -8,21 +8,23 @@ import { basename } from 'path';
 import { globbySync } from 'globby';
 
 class ProtoCoder {
-  constructor() {
+  constructor(protoSrc) {
+    this.protoSrc = protoSrc;
     this.protoRoot = new Map();
   }
 
-  async loadProtos(protoSrc) {
-    for (const protoPath of globbySync(`${protoSrc}/*.proto`)) {
+  async loadProtos() {
+    for (const protoPath of globbySync(`${this.protoSrc}/*.proto`)) {
       const filename = basename(protoPath);
-      const root = await protobuf.load(`${protoSrc}/${filename}`);
+      const root = await protobuf.load(`${this.protoSrc}/${filename}`);
 
       this.protoRoot.set(filename, root);
     }
   }
 
   async paramDecode(module, fnName, arrParams) {
-    const root = this.protoRoot.get(`${module}.proto`);
+    const filename = `${module}.proto`;
+    const root = this.protoRoot.get(filename) || await protobuf.load(`${this.protoSrc}/${filename}`);
     const proto = root.lookupType(`${module}.${fnName}`);
 
     const msg = proto.decode(arrParams[0]);
@@ -32,7 +34,8 @@ class ProtoCoder {
   }
 
   async paramEncode(module, fnName, objParams) {
-    const root = this.protoRoot.get(`${module}.proto`);
+    const filename = `${module}.proto`;
+    const root = this.protoRoot.get(filename) || await protobuf.load(`${this.protoSrc}/${filename}`);
     const proto = root.lookupType(`${module}.${fnName}`);
 
     const errMsg = proto.verify(objParams);
@@ -45,7 +48,8 @@ class ProtoCoder {
   }
 
   async resultEncode(module, fnName, result) {
-    const root = this.protoRoot.get(`${module}.proto`);
+    const filename = `${module}.proto`;
+    const root = this.protoRoot.get(filename) || await protobuf.load(`${this.protoSrc}/${filename}`);
     const proto = root.lookupType(`${module}.${fnName}Result`);
 
     const errMsg = proto.verify({ result });
@@ -62,7 +66,9 @@ class ProtoCoder {
 
   async resultDecode(module, fnName, bufResult) {
     const lookup = `${module}.${fnName}Result`;
-    const root = this.protoRoot.get(`${module}.proto`);
+    const filename = `${module}.proto`;
+
+    const root = this.protoRoot.get(filename) || await protobuf.load(`${this.protoSrc}/${filename}`);
     const proto = root.lookupType(lookup);
 
     try {

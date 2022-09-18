@@ -26,9 +26,8 @@ const params = {
 };
 
 describe('zCoder Test', () => {
-  beforeAll(async () => {
-    zpc = new ProtoCoder();
-    await zpc.loadProtos('./tests');
+  beforeAll(() => {
+    zpc = new ProtoCoder('./tests');
   });
 
   it('should encode params', async () => {
