@@ -15,6 +15,19 @@ class ProtoCoder {
     return Object.keys(msgObj).map((key) => msgObj[key]);
   }
 
+  async paramEncode(module, fnName, objParams) {
+    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
+    const proto = root.lookupType(`${module}.${fnName}`);
+
+    const errMsg = proto.verify(objParams);
+    if (errMsg) throw Error(errMsg);
+
+    const msg = proto.create(objParams);
+    const buf = proto.encode(msg).finish();
+
+    return buf;
+  }
+
   async resultEncode(module, fnName, result) {
     const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
     const proto = root.lookupType(`${module}.${fnName}Result`);
@@ -31,19 +44,6 @@ class ProtoCoder {
     return buf;
   }
 
-  async paramEncode(module, fnName, objParams) {
-    const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
-    const proto = root.lookupType(`${module}.${fnName}`);
-
-    const errMsg = proto.verify(objParams);
-    if (errMsg) throw Error(errMsg);
-
-    const msg = proto.create(objParams);
-    const buf = proto.encode(msg).finish();
-
-    return buf;
-  }
-
   async resultDecode(module, fnName, bufResult) {
     const lookup = `${module}.${fnName}Result`;
     const root = await protobuf.load(`${this.protoSrc}/${module}.proto`);
@@ -54,9 +54,9 @@ class ProtoCoder {
       return proto.toObject(msg);
     } catch (err) {
       if (err instanceof protobuf.util.ProtocolError) {
-        throw new Error(`Decoded message with missing required fields! LookupPath: '${lookup}'`);
+        throw new Error(`Decoded message with missing required fields! Lookup: '${lookup}'`);
       } else {
-        throw new Error(`Invalid wire format! LookupPath: '${lookup}'`);
+        throw new Error(`Invalid wire format! Lookup: '${lookup}'`);
       }
     }
   }

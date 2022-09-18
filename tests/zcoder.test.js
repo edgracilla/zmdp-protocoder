@@ -1,4 +1,4 @@
-const ProtoCoder = require('../index');
+import ProtoCoder from '../index.mjs';
 
 let zpc;
 
@@ -26,8 +26,9 @@ const params = {
 };
 
 describe('zCoder Test', () => {
-  beforeAll(() => {
-    zpc = new ProtoCoder('./tests');
+  beforeAll(async () => {
+    zpc = new ProtoCoder();
+    await zpc.loadProtos('./tests');
   });
 
   it('should encode params', async () => {

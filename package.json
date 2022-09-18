@@ -2,10 +2,11 @@
   "name": "zmdp-protocoder",
   "version": "1.0.0",
   "description": "ZMDP Suite protobuf encoder/decoder",
-  "main": "index.js",
+  "main": "index.mjs",
+  "type": "module",
   "scripts": {
-    "test": "jest --colors --verbose",
-    "coverage": "jest -i --coverage"
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest -i --detectOpenHandles",
+    "coverage": "node --experimental-vm-modules ./node_modules/.bin/jest -i --coverage"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/edgracilla/zmdp-protocoder#readme",
   "dependencies": {
+    "globby": "^13.1.2",
     "protobufjs": "^7.0.0"
   },
   "devDependencies": {
